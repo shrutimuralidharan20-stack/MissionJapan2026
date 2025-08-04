@@ -1,0 +1,17 @@
+import "./globals.css";
+import LogWorkoutButton from "../components/LogWorkoutButton";
+import { auth } from "../lib/firebase";
+
+export const metadata = { title: "Fitness Tracker" };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="bg-gray-100 min-h-screen">
+        {children}
+        {/* only show the button when logged in */}
+        {auth.currentUser && <LogWorkoutButton />}
+      </body>
+    </html>
+  );
+}
