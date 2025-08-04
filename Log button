@@ -1,0 +1,25 @@
+// path: components/LogWorkoutButton.tsx
+"use client";
+import { auth, db } from "../lib/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+
+export default function LogWorkoutButton() {
+  const router = useRouter();
+  const log = async () => {
+    if (!auth.currentUser) return;
+    await addDoc(collection(db, "workouts"), {
+      userId: auth.currentUser.uid,
+      date: serverTimestamp()
+    });
+    router.refresh();
+  };
+  return (
+    <button
+      onClick={log}
+      className="fixed bottom-6 right-6 bg-primary text-white rounded-full p-4 shadow-2xl hover:scale-105 transition"
+    >
+      ✅ Log workout
+    </button>
+  );
+}
