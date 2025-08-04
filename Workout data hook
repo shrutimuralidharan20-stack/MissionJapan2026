@@ -1,0 +1,22 @@
+// path: hooks/useWorkoutData.ts
+import { useEffect, useState } from "react";
+import {
+  collection, onSnapshot, query, orderBy, Timestamp
+} from "firebase/firestore";
+import { db } from "../lib/firebase";
+
+export interface WorkoutDoc {
+  id: string; userId: string; date: Timestamp;
+}
+
+export default function useWorkoutData() {
+  const [workouts, setWorkouts] = useState<WorkoutDoc[]>([]);
+  useEffect(() => {
+    const q = query(collection(db, "workouts"), orderBy("date", "desc"));
+    const unsub = onSnapshot(q, snap =>
+      setWorkouts(snap.docs.map(d => ({ id: d.id, ...(d.data() as any) })))
+    );
+    return unsub;
+  }, []);
+  return workouts;
+}
